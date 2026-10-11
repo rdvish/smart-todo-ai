@@ -78,7 +78,7 @@ function App() {
     <>
     <Router basename={process.env.PUBLIC_URL}>
       <div className="d-flex flex-column min-vh-100">
-      <Header title="My Todos List" searchBar={false}/>
+      <Header title="Smart Todo AI" searchBar={false}/>
       <div className="flex-grow-1">
       <Routes>
           <Route exact path="/" element={
