@@ -33,7 +33,7 @@ export const AddTodo = ({addTodo}) => {
       }
     } catch (err) {
       console.error('API call failed:', err);
-      alert("Could not connect to AI server. Make sure your Express backend is running on port 5000.");
+      alert("Could not connect to AI server");
     } finally {
       setLoading(false);
     }
