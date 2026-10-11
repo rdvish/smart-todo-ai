@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/smart-todo-ai/static/css/main.f855e6bc.css",
-    "main.js": "/smart-todo-ai/static/js/main.89af2e14.js",
+    "main.js": "/smart-todo-ai/static/js/main.d7f9473a.js",
     "static/js/453.fc0bc1a2.chunk.js": "/smart-todo-ai/static/js/453.fc0bc1a2.chunk.js",
     "index.html": "/smart-todo-ai/index.html",
     "main.f855e6bc.css.map": "/smart-todo-ai/static/css/main.f855e6bc.css.map",
-    "main.89af2e14.js.map": "/smart-todo-ai/static/js/main.89af2e14.js.map",
+    "main.d7f9473a.js.map": "/smart-todo-ai/static/js/main.d7f9473a.js.map",
     "453.fc0bc1a2.chunk.js.map": "/smart-todo-ai/static/js/453.fc0bc1a2.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f855e6bc.css",
-    "static/js/main.89af2e14.js"
+    "static/js/main.d7f9473a.js"
   ]
 }
