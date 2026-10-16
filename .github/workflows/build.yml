@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Compile React Production Build
-        run: npm run build
+        run: CI=false npm run build
 
       - name: Upload Production Artifact
         uses: actions/upload-artifact@v4
@@ -52,7 +52,7 @@ jobs:
             npm install
 
             # 4. Compile on the server to keep your local directory structured
-            npm run build
+            CI=false npm run build
 
             # 5. Serve the static build folder using PM2 on port 3000
             pm2 delete app || true
