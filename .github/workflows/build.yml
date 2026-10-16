@@ -1,4 +1,4 @@
-name: Node.js CI/CD for AWS EC2
+name: React App CI/CD for AWS EC2
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build-and-compile:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository Code
@@ -21,11 +21,17 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Run Tests (Optional)
-        run: npm test --if-present || true
+      - name: Compile React Production Build
+        run: npm run build
+
+      - name: Upload Production Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: react-build
+          path: build/ # Change to 'dist/' if you use Vite instead of Create React App
 
   deploy:
-    needs: build-and-test
+    needs: build-and-compile
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to EC2 via SSH
@@ -36,7 +42,18 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
+            # 1. Navigate to your project root folder
             cd /var/www/smart-todo-ai/smart-todo-ai
+
+            # 2. Pull the latest code updates
             git pull origin main
-            npm install --production
-            pm2 restart app || pm2 start src/index.js --name "app"
+
+            # 3. Clean install application packages
+            npm install
+
+            # 4. Compile on the server to keep your local directory structured
+            npm run build
+
+            # 5. Serve the static build folder using PM2 on port 3000
+            pm2 delete app || true
+            pm2 serve build 3000 --name "app" --spa
