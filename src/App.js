@@ -2,101 +2,123 @@ import './App.css';
 import Header from './MyComponents/Header';
 import Footer from './MyComponents/Footer';
 import Todos from './MyComponents/Todos';
-import {AddTodo} from './MyComponents/AddTodo';
-import {About} from './MyComponents/About';
-import { useState,useEffect} from 'react';
-import {BrowserRouter as Router,Route,Routes,Link} from 'react-router-dom';
-function App() {
-  let initTodo;
-  if(localStorage.getItem("todos")===null){
-    initTodo = [];
-  }
-  else{
-    initTodo = JSON.parse(localStorage.getItem("todos"));
-  }
-  const onDelete = (todo) => {
-    /*console.log("I am onDelete of todo",todo);
-    let index = todos.indexOf(todo);
-    todos.splice(index,1);*/
-    setTodos(todos.filter((e) => {
-      return e!==todo;
-    }));
-    console.log("deleted",todo);
-      localStorage.setItem("todos",JSON.stringify(todos));
-  }
-  const onComplete = (todo) => {
-    const updatedTodos = todos.map((e) => {
-    if (e === todo) {
-      return { ...e, completed: true };
-    }
-    return e;
-  });
-  setTodos(updatedTodos);
-  localStorage.setItem("todos", JSON.stringify(updatedTodos));
-  
-  }
-  const addTodo = (title, desc) => {
-    //console.log("I am adding this todo", title, desc);
-    let sno;
-    if(todos.length === 0){
-       sno = 1;
-    } else {
-       sno = todos[todos.length-1].sno + 1;
-    }
-    const myTodo = {
-      sno: sno,
-      title: title,
-      desc: desc,
-    }
-    setTodos([...todos, myTodo]);
-    console.log(myTodo);
-    //if(localStorage.getItem("todos")){
-    
-    //}
-  }
-  const [todos, setTodos] = useState(initTodo/*[
-    {
-      sno: 1,
-      title: "Go to the market",
-      desc: "You need to go to the market to buy groceries."
-    },
-    {
-      sno: 2,
-      title: "Complete React Project",
-      desc: "Finish the React project by the end of this week."
-    },
-    {
-      sno: 3,
-      title: "Read a book",
-      desc: "Read at least one chapter of a book every day."
-    }
-  ]*/);
-  useEffect(()=>{
-      localStorage.setItem("todos",JSON.stringify(todos));
-    },[todos])
+import { AddTodo } from './MyComponents/AddTodo';
+import { About } from './MyComponents/About';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+
+function PageTransition({ children }) {
+  const location = useLocation();
+  // The key changes on every navigation, so React remounts the wrapper
+  // and the CSS animation plays again.
   return (
-    <>
+    <div key={location.pathname} className="page-transition">
+      {children}
+    </div>
+  );
+}
+
+function App() {
+  // ---------- Todos ----------
+  const [todos, setTodos] = useState(() => {
+    try {
+      const saved = localStorage.getItem("todos");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // One place that saves todos, so the handlers below don't need to
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  const addTodo = (title, desc, subtasks = []) => {
+    const sno = todos.length === 0 ? 1 : todos[todos.length - 1].sno + 1;
+    const myTodo = { sno, title, desc, subtasks };
+    setTodos([...todos, myTodo]);
+  };
+
+  const onDelete = (todo) => {
+    setTodos(todos.filter((e) => e.sno !== todo.sno));
+  };
+
+  const onComplete = (todo) => {
+    // Safety net: don't complete a todo that still has open subtasks
+    const hasOpenSubtasks = (todo.subtasks || []).some((s) => !s.done);
+    if (hasOpenSubtasks) return;
+
+    setTodos(
+      todos.map((e) =>
+        e.sno === todo.sno ? { ...e, completed: true } : e
+      )
+    );
+  };
+
+  const onToggleSubtask = (todo, index) => {
+    setTodos(
+      todos.map((e) => {
+        if (e.sno !== todo.sno) return e;
+        const subtasks = (e.subtasks || []).map((s, i) =>
+          i === index ? { ...s, done: !s.done } : s
+        );
+        // Completed exactly when every subtask is done
+        const allDone = subtasks.length > 0 && subtasks.every((s) => s.done);
+        return { ...e, subtasks, completed: allDone };
+      })
+    );
+  };
+
+  // ---------- Theme ----------
+  const [theme, setTheme] = useState(
+    () =>
+      localStorage.getItem("theme") ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+  );
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-bs-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
+  const id = setTimeout(() => {
+    document.documentElement.classList.add("theme-ready");
+  }, 100);
+  return () => clearTimeout(id);
+}, []);
+
+  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+
+  return (
     <Router basename={process.env.PUBLIC_URL}>
       <div className="d-flex flex-column min-vh-100">
-      <Header title="Smart Todo AI" searchBar={false}/>
-      <div className="flex-grow-1">
-      <Routes>
-          <Route exact path="/" element={
-            
-              <>
-              <AddTodo addTodo={addTodo}/>
-              <Todos todos={todos} onComplete={onComplete} onDelete={onDelete}/>
-              </>
-            
-          }> 
-          </Route>
-        <Route exact path="/about" element={<About />} />
-    </Routes>
-    </div>
-      <Footer/>
+        <Header title="Smart Todo AI" searchBar={false} theme={theme} toggleTheme={toggleTheme} />
+        <div className="flex-grow-1">
+          <PageTransition>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <AddTodo addTodo={addTodo} />
+                  <Todos
+                    todos={todos}
+                    onComplete={onComplete}
+                    onDelete={onDelete}
+                    onToggleSubtask={onToggleSubtask}
+                  />
+                </>
+              }
+            />
+            <Route path="/about" element={<About />} />
+          </Routes>
+          </PageTransition>
+        </div>
+        <Footer />
       </div>
     </Router>
-    </>
   );
 }
 

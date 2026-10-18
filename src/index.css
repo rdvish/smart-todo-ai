@@ -1,6 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* ---------- Theme tokens ---------- */
+
+:root,
+[data-bs-theme="light"] {
+  --app-surface: #ffffff;
+  --app-border: #e3e5e8;
+  --app-muted: #6b7280;
+  --app-accent: #6366f1;
+  --app-accent-soft: rgba(99, 102, 241, 0.1);
+  --app-radius: 14px;
+  --app-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+}
+
+[data-bs-theme="dark"] {
+  --app-surface: var(--bs-tertiary-bg);
+  --app-border: var(--bs-border-color);
+  --app-muted: var(--bs-secondary-color);
+  --app-accent: #818cf8;
+  --app-accent-soft: rgba(129, 140, 248, 0.14);
+  --app-shadow: none;
+}
+
+/* ---------- Your existing rules ---------- */
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -10,4 +36,200 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* ---------- Layout helpers ---------- */
+
+.app-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.app-card {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow);
+  padding: 1.25rem;
+}
+
+/* ---------- Form ---------- */
+
+.app-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--app-muted);
+  margin-bottom: 0.35rem;
+}
+
+.app-input {
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+}
+
+.app-input:focus {
+  border-color: var(--app-accent);
+  box-shadow: 0 0 0 3px var(--app-accent-soft);
+}
+
+.app-btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 0.55rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  background: var(--app-accent);
+  color: #fff;
+  transition: filter 0.15s;
+}
+.app-btn:hover:not(:disabled) { filter: brightness(1.1); }
+.app-btn:disabled { opacity: 0.6; }
+
+.app-btn-ghost {
+  background: var(--app-accent-soft);
+  color: var(--app-accent);
+}
+
+/* ---------- Todo list ---------- */
+
+.filter-pill {
+  border: 1px solid var(--app-border);
+  background: transparent;
+  color: var(--app-muted);
+  border-radius: 999px;
+  padding: 0.25rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+.filter-pill.active {
+  background: var(--app-accent-soft);
+  border-color: transparent;
+  color: var(--app-accent);
+}
+
+.todo-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.1rem;
+  margin-bottom: 0.7rem;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.todo-card:hover { transform: translateY(-1px); }
+.todo-card.is-done { opacity: 0.55; }
+
+.todo-check {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  border-radius: 50%;
+  border: 2px solid var(--app-muted);
+  background: transparent;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #fff;
+}
+.todo-check:hover:not(:disabled) { border-color: var(--app-accent); }
+.todo-card.is-done .todo-check {
+  background: var(--app-accent);
+  border-color: var(--app-accent);
+}
+
+.todo-body { flex: 1; min-width: 0; }
+.todo-title { margin: 0; font-weight: 600; font-size: 1.05rem; }
+.todo-desc {
+  margin: 0.25rem 0 0;
+  color: var(--app-muted);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.todo-card.is-done .todo-title,
+.todo-card.is-done .todo-desc { text-decoration: line-through; }
+
+.todo-delete {
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  color: var(--app-muted);
+  padding: 4px;
+  border-radius: 8px;
+  line-height: 0;
+}
+.todo-delete:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+
+/* On desktop, show the delete icon only on hover. On touch it stays visible. */
+@media (hover: hover) {
+  .todo-delete { opacity: 0; transition: opacity 0.15s; }
+  .todo-card:hover .todo-delete,
+  .todo-delete:focus-visible { opacity: 1; }
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--app-muted);
+  padding: 2.5rem 1rem;
+}
+
+.subtasks { margin-top: 0.85rem; }
+
+.subtasks-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--app-muted);
+  margin-bottom: 0.4rem;
+}
+
+.subtasks-bar {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--app-border);
+  overflow: hidden;
+  margin-bottom: 0.6rem;
+}
+.subtasks-bar-fill {
+  height: 100%;
+  background: var(--app-accent);
+  transition: width 0.25s;
+}
+
+.subtask {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.25rem 0;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.subtask input { margin-top: 0.3rem; accent-color: var(--app-accent); }
+.subtask.is-done span { text-decoration: line-through; color: var(--app-muted); }
+
+.todo-check:disabled { cursor: not-allowed; }
+.todo-card:not(.is-done) .todo-check:disabled { opacity: 0.45; }
+
+.page-transition {
+  animation: pageIn 0.35s ease backwards;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Smooth colour change when toggling dark/light (enabled after load) */
+.theme-ready body,
+.theme-ready .app-card,
+.theme-ready .navbar {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition { animation: none; }
+  .theme-ready body,
+  .theme-ready .app-card,
+  .theme-ready .navbar { transition: none; }
 }
