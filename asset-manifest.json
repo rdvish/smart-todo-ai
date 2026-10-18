@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/smart-todo-ai/static/css/main.f855e6bc.css",
-    "main.js": "/smart-todo-ai/static/js/main.0fc5b4bc.js",
-    "static/js/453.fc0bc1a2.chunk.js": "/smart-todo-ai/static/js/453.fc0bc1a2.chunk.js",
-    "index.html": "/smart-todo-ai/index.html",
-    "main.f855e6bc.css.map": "/smart-todo-ai/static/css/main.f855e6bc.css.map",
-    "main.0fc5b4bc.js.map": "/smart-todo-ai/static/js/main.0fc5b4bc.js.map",
-    "453.fc0bc1a2.chunk.js.map": "/smart-todo-ai/static/js/453.fc0bc1a2.chunk.js.map"
+    "main.css": "/static/css/main.b68cbfd3.css",
+    "main.js": "/static/js/main.415fee88.js",
+    "static/js/453.fc0bc1a2.chunk.js": "/static/js/453.fc0bc1a2.chunk.js",
+    "index.html": "/index.html",
+    "main.b68cbfd3.css.map": "/static/css/main.b68cbfd3.css.map",
+    "main.415fee88.js.map": "/static/js/main.415fee88.js.map",
+    "453.fc0bc1a2.chunk.js.map": "/static/js/453.fc0bc1a2.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f855e6bc.css",
-    "static/js/main.0fc5b4bc.js"
+    "static/css/main.b68cbfd3.css",
+    "static/js/main.415fee88.js"
   ]
 }
