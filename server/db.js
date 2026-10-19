@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Pool } = require('pg');
+const { Pool } = require('pg'); //PostgreSQL client for Node.js
 
 
 const LOCAL_DB_URL = 'postgresql://postgres:postgres@localhost:5432/smart_todo_ai'; 
