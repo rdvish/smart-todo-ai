@@ -1,13 +1,15 @@
 import React from "react";
 import propTypes from 'prop-types';
 import { Link, NavLink } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 function Header(props) {
+  const { user, logout } = useAuth();
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
 
-        <Link className="navbar-brand display-5 fw-bold text-body text-uppercase" to="/">
+        <Link className="navbar-brand brand-script" to="/">
           {props.title}
         </Link>
 
@@ -38,6 +40,17 @@ function Header(props) {
               <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
               <button className="btn btn-outline-success" type="submit">Search</button>
             </form>
+          )}
+
+          {user ? (
+            <>
+              <span className="text-secondary small me-2">{user.email}</span>
+              <button type="button" className="btn btn-outline-secondary btn-sm me-2" onClick={logout}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link className="btn btn-outline-primary btn-sm me-2" to="/login">Login</Link>
           )}
 
           <button

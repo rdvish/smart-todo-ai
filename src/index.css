@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Pacifico&display=swap");
 
 /* ---------- Theme tokens ---------- */
 
@@ -22,7 +22,7 @@
   --app-shadow: none;
 }
 
-/* ---------- Your existing rules ---------- */
+
 
 body {
   margin: 0;
@@ -232,4 +232,19 @@ code {
   .theme-ready body,
   .theme-ready .app-card,
   .theme-ready .navbar { transition: none; }
+}
+
+.navbar-brand.brand-script {
+  font-family: "Pacifico", cursive;
+  font-weight: 400;              
+  font-size: 2rem;
+  text-transform: none;          
+  letter-spacing: 0.5px;
+  transform: rotate(-3deg);      
+  display: inline-block;
+  background: linear-gradient(90deg, #818cf8, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }

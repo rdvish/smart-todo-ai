@@ -20,7 +20,7 @@ function Todos(props) {
           <h4 className="fw-bold mb-0">Your todos</h4>
           <small className="text-secondary">{doneCount} of {total} done</small>
         </div>
-        <div className="d-flex gap-2">
+        <div className="d-flex flex-wrap align-items-center gap-2">
           {FILTERS.map(f => (
             <button
               key={f}
@@ -31,6 +31,15 @@ function Todos(props) {
               {f}
             </button>
           ))}
+          <button
+            type="button"
+            className="app-btn app-btn-ghost"
+            style={{ padding: '0.25rem 0.85rem', fontSize: '0.82rem' }}
+            onClick={props.onSync}
+            disabled={props.syncing}
+          >
+            {props.syncing ? 'Syncing...' : '☁️ Sync'}
+          </button>
         </div>
       </div>
 
@@ -41,7 +50,7 @@ function Todos(props) {
       ) : (
         visible.map(todo => (
           <Todo
-            key={todo.sno}
+            key={todo.id}
             todo={todo}
             onComplete={props.onComplete}
             onDelete={props.onDelete}

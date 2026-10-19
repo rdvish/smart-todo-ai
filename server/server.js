@@ -1,39 +1,75 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-require('dotenv').config();
+const pool = require('./db');
+const migrate = require('./migrate');
 
 const app = express();
-app.use(cors());
+
+app.set('trust proxy', 1); // Railway sits behind a proxy; needed for rate limiting
+app.use(
+  cors({
+    origin: (process.env.CORS_ORIGIN || 'http://localhost:3000')
+      .split(',')
+      .map((o) => o.trim()),
+  })
+);
 app.use(express.json());
 
-// Initialize Google Generative AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Auth and todo routes
+app.use('/api/auth', require('./auth'));
+app.use('/api/todos', require('./todos'));
 
-app.post('/api/suggest-subtasks', async (req, res) => {
-  const { title, description } = req.body;
+// Google Generative AI
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+
+
+app.get('/api/health/db', async (req, res) => {
+  try {
+    const r = await pool.query('SELECT now()');
+    res.json({ ok: true, time: r.rows[0].now });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// rate limiter
+const aiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'Too many requests, slow down' },
+});
+
+app.post('/api/suggest-subtasks', aiLimiter, async (req, res) => {
+  const title = String((req.body || {}).title || '').trim().slice(0, 255);
+  const description = String((req.body || {}).description || '').trim().slice(0, 2000);
+
+  if (!title) {
+    return res.status(400).json({ success: false, error: 'Title is required' });
+  }
 
   try {
-    // Use the fast and lightweight gemini-1.5-flash model
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.8-flash' });
+    const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
     const prompt = `You are a helpful task-management assistant. Given a todo task title and description, return 3 short sub-tasks separated by commas.\n\nTitle: ${title}\nDescription: ${description}`;
 
     const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-
-    res.json({
-      success: true,
-      subtasks: text,
-    });
+    res.json({ success: true, subtasks: result.response.text() });
   } catch (error) {
-    /*console.error('Error with Gemini AI:', error);
-    res.status(500).json({ success: false, error: error.message });*/
-    console.warn(`Model ${modelName} failed or busy, trying next...`, error.message);
-      lastError = error;
+    console.error(`Gemini model ${MODEL_NAME} failed:`, error.message);
+    res.status(502).json({ success: false, error: 'AI service unavailable, try again' });
   }
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Backend server running on port ${PORT}`));
+migrate()
+  .then(() => app.listen(PORT, () => console.log(`Server on ${PORT}`)))
+  .catch((err) => {
+    console.error('DB setup failed:', err.message);
+    process.exit(1);
+  });
