@@ -1,0 +1,38 @@
+name: Deploy backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'server/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Update server and restart
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} '
+            set -e
+            cd ~/smart-todo-ai
+            git fetch origin main
+            git reset --hard origin/main
+            cd server
+            npm ci --omit=dev
+            pm2 restart todo-api --update-env
+            sleep 3
+            curl -fsS http://localhost:5000/api/auth/me || [ $? -eq 22 ]
+          '
