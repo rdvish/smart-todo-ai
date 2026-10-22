@@ -7,9 +7,10 @@ This app has been deployed, Check by visiting :- https://rdvish.github.io/react-
 Recent Enhancements:-
 1. Implemented Generative AI to suggest user sub tasks for the task using Gemini
 2. Implemented changes in design to enhance user experience
+3. added authentication for users
+4. allowed registered users to sync tasks on dabatase
+5. added rate limit to generative AI feature
+6. deployed the app on aws instance
 
-Features planned by end of this month (10/2026) :-
-1. adding authentication for users
-2. allowing registered users to sync tasks on dabatase
-3. adding rate limit to generative AI feature
-4. deploying the app on aws instance
+Ongoing Bug fixes:-
+Currently working on migrating the hosting from railway to aws since the railway hosting is down.
