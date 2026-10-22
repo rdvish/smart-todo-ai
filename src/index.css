@@ -249,34 +249,3 @@ code {
   color: transparent;
 }
 
-.marquee-bar {
-  background: #f59e0b;
-  color: #1f1300;
-  overflow: hidden;
-  white-space: nowrap;
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.45rem 0;
-}
-
-.marquee-track {
-  display: inline-flex;
-  animation: marquee 35s linear infinite;
-}
-
-.marquee-track span {
-  padding-right: 4rem;
-}
-
-.marquee-bar:hover .marquee-track {
-  animation-play-state: paused;
-}
-
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation: none; }
-}
