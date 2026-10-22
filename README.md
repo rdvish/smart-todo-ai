@@ -11,6 +11,3 @@ Recent Enhancements:-
 4. allowed registered users to sync tasks on dabatase
 5. added rate limit to generative AI feature
 6. deployed the app on aws instance
-
-Ongoing Bug fixes:-
-Currently working on migrating the hosting from railway to aws since the railway hosting is down.

@@ -206,14 +206,7 @@ function App() {
 
       <div className="d-flex flex-column min-vh-100">
         <div className="marquee-bar" role="status">
-        <div className="marquee-track">
-          <span>
-            🛠️ Backend services (AI subtasks, login, sync) are down because of a hosting issue on Railway. We are migrating to AWS, and they will stay unavailable until then. You can still add, complete and delete todos, which are saved on this device.
-          </span>
-          <span aria-hidden="true">
-            🛠️ Backend services (AI subtasks, login, sync) are down because of a hosting issue on Railway. We are migrating to AWS, and they will stay unavailable until then. You can still add, complete and delete todos, which are saved on this device.
-          </span>
-        </div>
+       
       </div>
         <Header title="Smart Todo AI" searchBar={false} theme={theme} toggleTheme={toggleTheme} />
         <div className="flex-grow-1">
