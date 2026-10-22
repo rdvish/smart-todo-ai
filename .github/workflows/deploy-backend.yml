@@ -32,7 +32,7 @@ jobs:
             git reset --hard origin/main
             cd server
             npm ci --omit=dev
-            pm2 restart smart-todo-ai --update-env
+            pm2 restart smart_todo_ai --update-env
             sleep 3
             curl -fsS http://localhost:5000/api/auth/me || [ $? -eq 22 ]
           '
